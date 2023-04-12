@@ -1,48 +1,19 @@
 const express = require('express')
-const contacts = require('../../models/contacts');
 const validateData = require('../../helpers/validateData');
-const { nanoid } = require("nanoid");
+
+const ctrl = require('../../controllers/contacts')
 
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  const result = await contacts.listContacts();
-  res.json(result);
-})
+router.get('/', ctrl.getContacts)
 
-router.get('/:contactId', async (req, res, next) => {
-  const result = await contacts.getContactById(req.params.contactId);
-  if (!result) {
-    return res.status(404).json({"message": "Not found"});
-  }
-  res.json(result);
-})
+router.get('/:contactId', ctrl.getContact)
 
-router.post('/', validateData,   async (req, res, next) => {
-  const newContact = {...req.body, id: nanoid()}
-  contacts.addContact(newContact)
-  res.status(201).json(newContact)
-})
+router.post('/', validateData, ctrl.postContact)
 
-router.delete('/:contactId', async (req, res, next) => {
-  const result = await contacts.removeContact(req.params.contactId);
-  console.log('result', result)
-  if (result) {
-    return res.json({ message: 'contact deleted' });
-  }
-  res.status(404).json({ message: 'Not found' });
-})
+router.delete('/:contactId', ctrl.deleteContact)
 
-router.put('/:contactId', async (req, res, next) => {
-  console.log('body',req.body)
-  if (!Object.keys(req.body).length) {
-    return res.status(404).json({ message: 'missing fields' });
-  }
-  const result = await contacts.updateContact(req.params.contactId, req.body);
-  if (result) {
-    return res.json(result);
-  }
-  res.status(404).json({ message: 'Not found' });
-})
+router.put('/:contactId', ctrl.putContact )
 
 module.exports = router
+

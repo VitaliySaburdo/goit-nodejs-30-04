@@ -1,4 +1,4 @@
-const contacts = require("../models/contacts");
+const contacts = require("../models/contacts-rdjsn");
 const { nanoid } = require("nanoid");
 
 const getContacts = async (req, res, next) => {

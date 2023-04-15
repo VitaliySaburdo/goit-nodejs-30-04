@@ -1,6 +1,7 @@
-const {Schema, model} = require('mongoose');
+const fs = require('fs/promises');
+const path = require('path');
 
-
+const contactsPath = path.resolve('./models/contacts.json');
 
 const listContacts = async () => {
   return JSON.parse(await fs.readFile(contactsPath))

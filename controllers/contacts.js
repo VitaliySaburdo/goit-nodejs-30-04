@@ -1,4 +1,4 @@
-const contacts = require("../models/contacts-rdjsn");
+const contacts = require("../models/contacts");
 const { nanoid } = require("nanoid");
 
 const getContacts = async (req, res, next) => {
@@ -60,10 +60,26 @@ const putContact = async (req, res, next) => {
   }
 };
 
+const patchContact = async (req, res, next) => {
+  try {
+    if (!Object.keys(req.body).includes('favorite')) {
+      return res.status(400).json({ message: "missing field favorite" });
+    }
+    const result = await contacts.updateStatusContact(req.params.contactId, req.body);
+    if (result) {
+      return res.json(result);
+    }
+    res.status(404).json({ message: "Not found" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getContacts,
   getContact,
   postContact,
   deleteContact,
   putContact,
+  patchContact,
 };

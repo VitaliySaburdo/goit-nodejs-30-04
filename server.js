@@ -3,8 +3,14 @@ const mongoose = require('mongoose');
 
 const {DB_HOST, PORT = 3000} = process.env;
 
+const settingsMongoose = {
+  useNewUrlParser: true,
+  // useCreateIndex: true,
+  useUnifiedTopology: true,
+}
 
-mongoose.connect(DB_HOST)
+
+mongoose.connect(DB_HOST, settingsMongoose)
   .then(()=> {
     app.listen(PORT);
     console.log('Database connection successful');

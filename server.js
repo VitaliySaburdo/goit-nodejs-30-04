@@ -7,6 +7,7 @@ const settingsMongoose = {
   useNewUrlParser: true,
   // useCreateIndex: true,
   useUnifiedTopology: true,
+  autoIndex: true,
 }
 
 

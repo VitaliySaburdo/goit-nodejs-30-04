@@ -24,8 +24,9 @@ const getContact = async (req, res, next) => {
 
 const postContact = async (req, res, next) => {
   try {
-    contacts.addContact(req.body);
-    res.status(201).json(req.body);
+    const newContact = await contacts.addContact(req.body);
+    console.log(newContact)
+    res.status(201).json(newContact);
   } catch (error) {
     next(error);
   }

@@ -18,7 +18,7 @@ const addContact = async (newContact) => {
 }
 
 const updateContact = async (contactId, body) => {
-  return Contacts.findByIdAndUpdate(contactId, body);
+  return Contacts.findByIdAndUpdate(contactId, body, { new: true });
 }
 
 const updateStatusContact = async (contactId, body) => {

@@ -17,5 +17,5 @@ router.put('/:contactId', ctrl.putContact);
 
 router.patch('/:contactId/favorite', ctrl.patchContact);
 
-module.exports = router
+module.exports = router;
 

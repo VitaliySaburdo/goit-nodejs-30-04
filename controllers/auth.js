@@ -2,6 +2,8 @@ const {checkUser, addUser} = require('../models/auth');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const {SECRET_KEY} = process.env;
+
 
 const register = async(req, res, next) => {
   try {
@@ -29,6 +31,7 @@ const login = async(req, res, next) => {
     if (!passCompare) {
       return res.status(401).json({message: 'Email or password is wrong'});
     };
+    const payload = {};
     const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '1d'});
     res.json({token , user: {email: result.email, subscription: result.subscription}});
   } catch (error) {

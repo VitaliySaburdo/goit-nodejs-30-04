@@ -26,7 +26,7 @@ const contacts = new Schema({
     ref: 'user',
   }
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 

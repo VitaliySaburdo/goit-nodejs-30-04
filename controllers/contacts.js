@@ -3,7 +3,9 @@ const contacts = require("../models/contacts");
 
 const getContacts = async (req, res, next) => {
   try {
-    const result = await contacts.listContacts();
+    const {page = 1, limit = 6} = req.query;
+    const skip = (page - 1) * limit;
+    const result = await contacts.listContacts({owner: req.user.id}, skip, +limit);
     res.json(result);
   } catch (error) {
     next(error);
@@ -12,7 +14,8 @@ const getContacts = async (req, res, next) => {
 
 const getContact = async (req, res, next) => {
   try {
-    const result = await contacts.getContactById(req.params.contactId);
+    // const result = await contacts.getContactById(req.params.contactId);
+    const result = await contacts.getContact({owner: req.user.id, _id: req.params.contactId});
     if (!result) {
       return res.status(404).json({ message: "Not found" });
     }
@@ -24,8 +27,7 @@ const getContact = async (req, res, next) => {
 
 const postContact = async (req, res, next) => {
   try {
-    const newContact = await contacts.addContact(req.body);
-    console.log(newContact)
+    const newContact = await contacts.addContact({...req.body, owner: req.user.id});
     res.status(201).json(newContact);
   } catch (error) {
     next(error);
@@ -35,7 +37,6 @@ const postContact = async (req, res, next) => {
 const deleteContact = async (req, res, next) => {
   try {
     const result = await contacts.removeContact(req.params.contactId);
-    console.log("result", result);
     if (result) {
       return res.json({ message: "contact deleted" });
     }

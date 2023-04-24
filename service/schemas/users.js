@@ -20,8 +20,12 @@ const users = new Schema({
     enum: ["starter", "pro", "business"],
     default: "starter"
   },
-  token: String
-});
+  token: {
+    type: String,
+    default: null
+  }
+}, {timestamps: true}
+);
 
 const Users = mongoose.model('user', users);
 

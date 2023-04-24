@@ -1,12 +1,14 @@
 const express = require('express');
 const validateData = require('../../helpers/validateData');
-const authMiddleware = require('../../middlewares/auth');
+const auth = require('../../middlewares/auth');
 
 const ctrl = require('../../controllers/contacts');
 
 const router = express.Router();
 
-router.get('/', authMiddleware, ctrl.getContacts);
+router.use(auth);
+
+router.get('/', ctrl.getContacts);
 
 router.get('/:contactId', ctrl.getContact);
 

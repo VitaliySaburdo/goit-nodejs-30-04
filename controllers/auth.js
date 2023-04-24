@@ -1,4 +1,4 @@
-const {checkUser, addUser} = require('../models/auth');
+const {checkUser, addUser, recordToken} = require('../models/auth');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -8,9 +8,7 @@ const {SECRET_KEY} = process.env;
 const register = async(req, res, next) => {
   try {
     const {name, email, password} = req.body;
-    const result = await checkUser(email);
-    // console.log('result', result);
-    // console.log('result', Boolean(result));
+    const result = await checkUser({email: email});
     if (result) {
       return res.status(409).json({message: 'Email in use'});
     }
@@ -25,7 +23,7 @@ const register = async(req, res, next) => {
 const login = async(req, res, next) => {
   try {
     const {email, password} = req.body;
-    const result = await checkUser(email);
+    const result = await checkUser({email: email});
     if (!result) {
       return res.status(401).json({message: 'Email or password is wrong'});
     };
@@ -35,6 +33,7 @@ const login = async(req, res, next) => {
     };
     const payload = {id: result._id, name: result.name};
     const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '1d'});
+    await recordToken(result._id, token);
     res.json({token , user: {email: result.email, subscription: result.subscription}});
   } catch (error) {
     next(error);
@@ -43,21 +42,32 @@ const login = async(req, res, next) => {
 
 const logout = async(req, res, next) => {
   try {
-    const result = checkUser(req.user.id);
-    if (!result) {
-      res.status(401).json({
+    await recordToken(req.user.id, null);
+    req.user = null;
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  };
+};
+
+const current = async(req, res, next) => {
+  try {
+    
+    const user = await checkUser({_id: req.user.id});
+    if (!user) {
+      return res.status(401).json({
         message: "Not authorized"
       });
     };
-    req.user = null;
-    res.status(204);
+    res.json({email: user.email, subscription: user.subscription});
   } catch (error) {
-    
-  }
-}
+    next(error);
+  };
+};
 
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  current
 };

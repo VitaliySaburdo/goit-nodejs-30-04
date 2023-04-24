@@ -1,12 +1,16 @@
 const Contacts = require('../service/schemas/contacts');
 
 
-const listContacts = async () => {
-  return await Contacts.find();
+const listContacts = async (param = {}, skip, limit) => {
+  return await Contacts.find(param, '-createdAt -updatedAt', {skip: skip, limit: limit}).populate('owner', '_id name');
 }
 
 const getContactById = async (contactId) => {
   return await Contacts.findById(contactId);
+}
+
+const getContact = async (param) => {
+  return await Contacts.findOne(param);
 }
 
 const removeContact = async (contactId) => {
@@ -27,6 +31,7 @@ const updateStatusContact = async (contactId, body) => {
 
 module.exports = {
   listContacts,
+  getContact,
   getContactById,
   removeContact,
   addContact,

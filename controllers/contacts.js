@@ -51,11 +51,11 @@ const putContact = async (req, res, next) => {
   try {
     if (!Object.keys(req.body).length) {
       return res.status(404).json({ message: "missing fields" });
-    }
+    };
     const result = await contacts.updateContact(req.params.contactId, req.body);
     if (result) {
       return res.json(result);
-    }
+    };
     res.status(404).json({ message: "Not found" });
   } catch (error) {
     next(error);
@@ -66,11 +66,12 @@ const patchContact = async (req, res, next) => {
   try {
     if (!Object.keys(req.body).includes('favorite')) {
       return res.status(400).json({ message: "missing field favorite" });
-    }
-    const result = await contacts.updateStatusContact(req.params.contactId, req.body);
+    };
+    console.log('body', req.body);
+    const result = await contacts.updateStatusContact(req.params.contactId, {favorite: req.body.favorite});
     if (result) {
       return res.json(result);
-    }
+    };
     res.status(404).json({ message: "Not found" });
   } catch (error) {
     next(error);

@@ -1,6 +1,7 @@
 const express = require('express');
 const validateData = require('../../helpers/validateData');
 const auth = require('../../middlewares/auth');
+const owner = require('../../middlewares/ownerConctact');
 
 const ctrl = require('../../controllers/contacts');
 
@@ -14,11 +15,11 @@ router.get('/:contactId', ctrl.getContact);
 
 router.post('/', validateData, ctrl.postContact);
 
-router.delete('/:contactId', ctrl.deleteContact);
+router.delete('/:contactId', owner, ctrl.deleteContact);
 
-router.put('/:contactId', ctrl.putContact);
+router.put('/:contactId', owner, ctrl.putContact);
 
-router.patch('/:contactId/favorite', ctrl.patchContact);
+router.patch('/:contactId/favorite', owner, ctrl.patchContact);
 
 module.exports = router;
 

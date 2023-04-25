@@ -1,4 +1,4 @@
-const {checkUser, addUser, recordToken} = require('../models/auth');
+const {checkUser, addUser, recordToken, updateSubUser} = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -65,9 +65,26 @@ const current = async(req, res, next) => {
   };
 };
 
+const patchSubscription = async(req, res, next) => {
+  try {
+    if (!Object.keys(req.body).includes('subscription')) {
+      return res.status(400).json({ message: "missing field subscription" });
+    }
+    console.log({subscription: req.body.subscription})
+    const result = await updateSubUser(req.user.id, {subscription: req.body.subscription});
+    if (result) {
+      return res.json(result);
+    }
+    res.status(404).json({ message: "Not found" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
-  current
+  current,
+  patchSubscription
 };

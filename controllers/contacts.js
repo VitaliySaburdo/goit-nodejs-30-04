@@ -3,9 +3,10 @@ const contacts = require("../models/contacts");
 
 const getContacts = async (req, res, next) => {
   try {
-    const {page = 1, limit = 6} = req.query;
+    const {page = 1, limit = 6, favorite} = req.query;
     const skip = (page - 1) * limit;
-    const result = await contacts.listContacts({owner: req.user.id}, skip, +limit);
+    const query = favorite ? {owner: req.user.id, favorite} : {owner: req.user.id};
+    const result = await contacts.listContacts(query, skip, +limit);
     res.json(result);
   } catch (error) {
     next(error);

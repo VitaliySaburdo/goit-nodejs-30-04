@@ -1,10 +1,10 @@
 const express = require('express');
 
-const auth = require('../../middlewares/auth');
+const auth = require('../middlewares/auth');
 
-const validate = require('../../helpers/validateUser')
+const validate = require('../helpers/validateUser')
 
-const ctrl = require('../../controllers/users');
+const ctrl = require('../controllers/users');
 
 
 const router = express.Router();

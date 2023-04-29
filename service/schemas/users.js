@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 const Schema = mongoose.Schema;
 
 const users = new Schema({
@@ -21,6 +22,10 @@ const users = new Schema({
     default: "starter"
   },
   token: {
+    type: String,
+    default: null
+  },
+  avatarURL: {
     type: String,
     default: null
   }

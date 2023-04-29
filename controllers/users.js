@@ -1,6 +1,7 @@
 const {checkUser, addUser, recordToken, updateSubUser} = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 
 const {SECRET_KEY} = process.env;
 
@@ -13,7 +14,7 @@ const register = async(req, res, next) => {
       return res.status(409).json({message: 'Email in use'});
     }
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    const newUser = await addUser({name, email, password: hashPassword});
+    const newUser = await addUser({name, email, password: hashPassword, avatarURL: gravatar.url(email, { d: 'retro' })});
     res.status(201).json({user: {email: newUser.email, subscription: newUser.subscription}});
   } catch (error) {
     next(error);

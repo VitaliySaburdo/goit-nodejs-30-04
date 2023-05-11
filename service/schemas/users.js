@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
@@ -26,6 +27,16 @@ const users = new Schema({
   }
 }, {timestamps: true}
 );
+
+users.methods.hashPassword = async function(password) {
+  this.password = await bcrypt.hash(password, 10);
+};
+
+users.methods.comperePassword = async function(password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+
 
 const Users = mongoose.model('user', users);
 
